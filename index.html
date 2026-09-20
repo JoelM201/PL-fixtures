@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2026/27 Season — Premier League, Europe & Internationals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0A10;
+    --bg-raised: #141220;
+    --bg-card: #181625;
+    --line: #2A2740;
+    --ink: #F3F1FA;
+    --ink-dim: #A8A3C0;
+    --ink-faint: #6F6A8C;
+
+    --pl: #3D0F5E;
+    --pl-bright: #B026D6;
+    --pl-pink: #E90052;
+    --ucl: #0A2E8C;
+    --ucl-bright: #4C7BFF;
+    --uel: #FF5A00;
+    --uecl: #00B37A;
+    --intl: #C9A227;
+
+    --radius: 14px;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root[data-theme="light"] {
+    --bg: #F4F2FA;
+    --bg-raised: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --line: #DDD8EE;
+    --ink: #17131F;
+    --ink-dim: #524C6B;
+    --ink-faint: #8A84A3;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: calc(112px + var(--safe-t)); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding-top: var(--safe-t);
+    padding-bottom: var(--safe-b);
+    -webkit-font-smoothing: antialiased;
+  }
+  .display {
+    font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    line-height: 0.9;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: 44px 22px 30px;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(176,38,214,0.35), transparent 55%),
+      radial-gradient(circle at 90% 20%, rgba(76,123,255,0.28), transparent 50%),
+      linear-gradient(180deg, #14102080, transparent);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 68px);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 760px; margin: 0 auto; }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; color: var(--ink-dim);
+    margin-bottom: 14px;
+  }
+  .kicker .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pl-pink); box-shadow: 0 0 10px var(--pl-pink); }
+  h1.display {
+    font-size: clamp(40px, 11vw, 78px);
+    margin: 0 0 6px;
+    background: linear-gradient(100deg, #fff 20%, #C9BCEA 60%, #4C7BFF 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  :root[data-theme="light"] h1.display { background: linear-gradient(100deg, #17131F 20%, #3D0F5E 70%, #0A2E8C 100%); -webkit-background-clip: text; background-clip: text; }
+  .hero p.sub { font-size: 16px; color: var(--ink-dim); max-width: 58ch; line-height: 1.55; margin: 0 0 22px; }
+  .hero p.sub strong { color: var(--ink); font-weight: 600; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 600;
+    padding: 7px 12px 7px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    cursor: pointer;
+    user-select: none;
+    transition: transform .12s ease, border-color .12s ease, opacity .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .chip:active { transform: scale(0.96); }
+  .chip .swatch { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .chip[data-off="true"] { opacity: 0.35; }
+  .chip[data-comp="ALL"] { font-weight: 800; }
+
+  /* ---------- Sticky filter/search bar ---------- */
+  .toolbar {
+    position: sticky; top: 0; z-index: 20;
+    padding-top: calc(10px + var(--safe-t));
+    padding: calc(10px + var(--safe-t)) 22px 10px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .toolbar-inner { max-width: 760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .stat { font-size: 12.5px; color: var(--ink-faint); margin-left: auto; white-space: nowrap; font-weight: 600; }
+
+  /* ---------- Timeline ---------- */
+  main { max-width: 760px; margin: 0 auto; padding: 30px 22px 20px; }
+  .month-head {
+    display: flex; align-items: baseline; gap: 12px;
+    margin: 40px 0 16px;
+  }
+  .month-head:first-child { margin-top: 6px; }
+  .month-head .display { font-size: 30px; color: var(--ink); }
+  .month-head .yr { font-size: 14px; color: var(--ink-faint); font-weight: 700; }
+  .month-head .rule { flex: 1; height: 1px; background: var(--line); }
+
+  .entry {
+    position: relative;
+    display: flex; gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .entry:last-child { border-bottom: none; }
+  .entry.hidden { display: none; }
+
+  .date-col { width: 66px; flex-shrink: 0; padding-top: 2px; }
+  .date-col .d { font-size: 22px; font-weight: 800; font-family: 'Big Shoulders Display', sans-serif; line-height: 1; }
+  .date-col .wd { font-size: 11px; color: var(--ink-faint); font-weight: 700; text-transform: uppercase; margin-top: 3px; }
+
+  .content-col { flex: 1; min-width: 0; }
+  .tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+    color: #fff; white-space: nowrap;
+  }
+  .tag.PL  { background: linear-gradient(120deg, var(--pl), var(--pl-bright)); }
+  .tag.UCL { background: linear-gradient(120deg, var(--ucl), var(--ucl-bright)); }
+  .tag.UEL { background: var(--uel); }
+  .tag.UECL{ background: var(--uecl); }
+  .tag.INT { background: var(--intl); color: #241d02; }
+  .mw { font-size: 12px; color: var(--ink-faint); font-weight: 600; }
+
+  .fixture { font-size: 15.5px; font-weight: 600; line-height: 1.4; }
+  .fixture .vs { color: var(--ink-faint); font-weight: 500; padding: 0 5px; }
+  .detail { font-size: 13.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.5; }
+  .fixlist { margin-top: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .fixlist div { font-size: 14px; color: var(--ink); }
+  .fixlist div .vs { color: var(--ink-faint); font-weight: 500; padding: 0 5px; }
+
+  .intl-block {
+    background: linear-gradient(120deg, color-mix(in srgb, var(--intl) 14%, transparent), transparent);
+    border: 1px solid color-mix(in srgb, var(--intl) 35%, var(--line));
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 4px 0;
+  }
+  .intl-block .fixture { font-size: 16px; }
+  .intl-block .detail { color: var(--ink-dim); }
+
+  footer {
+    max-width: 760px; margin: 10px auto 40px; padding: 22px 22px 0;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-faint); line-height: 1.6;
+  }
+  footer a { color: var(--ink-dim); }
+
+  .theme-toggle {
+    position: fixed; right: 16px; z-index: 30;
+    top: calc(16px + var(--safe-t));
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--bg-raised); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 15px;
+  }
+
+  @media (max-width: 420px) {
+    .hero { padding: 34px 16px 24px; }
+    main { padding: 24px 16px 16px; }
+    .toolbar { padding-left: 16px; padding-right: 16px; }
+    .date-col { width: 54px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="kicker"><span class="dot"></span>2026/27 SEASON</div>
+    <h1 class="display">Fixture<br>Calendar</h1>
+    <p class="sub">Every Premier League matchweek alongside the <strong>Champions League</strong>, <strong>Europa League</strong> and <strong>Conference League</strong> games involving English clubs — plus the international breaks that pause the domestic season. Tap a badge below to filter.</p>
+    <div class="legend" id="legend">
+      <div class="chip" data-comp="ALL"><span class="swatch" style="background:linear-gradient(90deg,#B026D6,#4C7BFF,#FF5A00,#00B37A,#C9A227)"></span>All</div>
+      <div class="chip" data-comp="PL"><span class="swatch" style="background:var(--pl-bright)"></span>Premier League</div>
+      <div class="chip" data-comp="UCL"><span class="swatch" style="background:var(--ucl-bright)"></span>Champions League</div>
+      <div class="chip" data-comp="UEL"><span class="swatch" style="background:var(--uel)"></span>Europa League</div>
+      <div class="chip" data-comp="UECL"><span class="swatch" style="background:var(--uecl)"></span>Conference League</div>
+      <div class="chip" data-comp="INT"><span class="swatch" style="background:var(--intl)"></span>International</div>
+    </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <span class="stat" id="statLine"></span>
+  </div>
+</div>
+
+<main id="timeline"></main>
+
+<footer>
+  Dates reflect schedules confirmed as of September 2026. Premier League kickoff times beyond the opening weeks, and any fixture, are routinely moved for TV selection or European commitments — check <a href="https://www.premierleague.com/fixtures" target="_blank" rel="noopener">premierleague.com</a>, <a href="https://www.uefa.com" target="_blank" rel="noopener">uefa.com</a> and your club's official channels before travelling. Not every fixture in a matchweek or European matchday is listed individually — headline and English-club fixtures are shown, with the rest of the round noted alongside.
+</footer>
+
+<script>
+const PL = "PL", UCL = "UCL", UEL = "UEL", UECL = "UECL", INT = "INT";
+
+// ---- Data: season events ----
+const events = [
+  // ===== AUGUST 2026 =====
+  { date: "2026-08-21", comp: PL, mw: "Matchweek 1", fixtures: ["Arsenal vs Coventry City"], detail: "Season opener at the Emirates — the champions host one of three promoted sides." },
+  { date: "2026-08-22", comp: PL, mw: "Matchweek 1", fixtures: ["Hull City vs Manchester United","Brentford vs Tottenham Hotspur","Everton vs Crystal Palace","Ipswich Town vs Sunderland","Nottingham Forest vs Leeds United"], detail: "Hull's first top-flight fixture in over a decade opens the Saturday programme." },
+  { date: "2026-08-23", comp: PL, mw: "Matchweek 1", fixtures: ["Manchester City vs AFC Bournemouth","Brighton & Hove Albion vs Aston Villa"], detail: "Opening weekend concludes at the Etihad and the Amex." },
+
+  // ===== SEPTEMBER 2026 =====
+  { date: "2026-09-08", comp: UCL, mw: "Matchday 1", fixtures: ["Aston Villa 3–2 Club Brugge","Manchester City 2–0 Porto (away)"], detail: "Villa mark their Champions League return with a five-goal thriller at Villa Park." },
+  { date: "2026-09-09", comp: UCL, mw: "Matchday 1", fixtures: ["Liverpool 2–1 Atlético Madrid","Arsenal 1–0 Napoli"], detail: "Anfield and the Emirates both deliver home wins on matchday one." },
+  { date: "2026-09-10", comp: UCL, mw: "Matchday 1", fixtures: ["Manchester United vs Sabah"], detail: "United open their league-phase campaign at Old Trafford." },
+  { date: "2026-09-13", comp: PL, mw: "Matchweek 4", fixtures: ["Manchester United vs Manchester City"], detail: "The first Manchester derby of the season, at Old Trafford." },
+  { date: "2026-09-16", comp: UEL, mw: "Matchday 1", fixtures: ["English clubs begin their campaign"], detail: "Bournemouth, Sunderland and Crystal Palace enter the 36-team Europa League league phase over the 16th–17th." },
+  { date: "2026-09-21", comp: INT, fixtures: ["International window opens"], detail: "FIFA's newly-merged September/October window begins — the first expanded break of the post-World Cup calendar, running until 6 October with room for four matches per nation. No Premier League football on the weekends of 26 September and 3 October." },
+
+  // ===== OCTOBER 2026 =====
+  { date: "2026-10-06", comp: INT, fixtures: ["International window closes"], detail: "England play Spain and Croatia, plus Czechia twice, across the extended break before club football resumes." },
+  { date: "2026-10-10", comp: PL, mw: "Matchweek 7", fixtures: ["Liverpool vs Manchester City"], detail: "The first Anfield meeting of two sides who defined the previous decade's title races." },
+  { date: "2026-10-13", comp: UCL, mw: "Matchday 2", fixtures: ["Arsenal vs Lille","Atlético Madrid vs Manchester United (away)"], detail: "Arsenal host Lille at the Emirates while United travel to Madrid." },
+  { date: "2026-10-14", comp: UCL, mw: "Matchday 2", fixtures: ["Manchester City vs Paris Saint-Germain"], detail: "A rematch of recent European heavyweight ties at the Etihad." },
+  { date: "2026-10-15", comp: UEL, mw: "Matchday 2", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "" },
+  { date: "2026-10-15", comp: UECL, mw: "Matchday 1", fixtures: ["Brighton & Hove Albion begin their campaign"], detail: "Brighton's Conference League league phase opens, with Monaco at home and away trips to Panathinaikos and Getafe among their ties." },
+  { date: "2026-10-20", comp: UCL, mw: "Matchday 3", fixtures: ["Bayern Munich vs Arsenal (away)"], detail: "Arsenal travel to the Allianz Arena, alongside a PSG–Barcelona headline fixture elsewhere in the round." },
+  { date: "2026-10-22", comp: UEL, mw: "Matchday 3", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "" },
+  { date: "2026-10-22", comp: UECL, mw: "Matchday 2", fixtures: ["Brighton & Hove Albion in action"], detail: "" },
+  { date: "2026-10-24", comp: PL, mw: "Matchweek 9", fixtures: ["Aston Villa vs Manchester City","Chelsea vs Tottenham Hotspur","Arsenal vs Everton","Coventry City vs Fulham"], detail: "Villa's kickoff can shift to Wednesday evening if they're drawn away in the Champions League the night before." },
+  { date: "2026-10-25", comp: PL, mw: "Matchweek 9", fixtures: ["Liverpool vs Brighton & Hove Albion","Manchester United vs AFC Bournemouth","Crystal Palace vs Newcastle United","Hull City vs Brentford","Sunderland vs Leeds United"], detail: "" },
+  { date: "2026-10-31", comp: PL, mw: "Matchweek 10", fixtures: ["Chelsea vs Manchester United","Manchester City vs Brighton & Hove Albion","Tottenham Hotspur vs Crystal Palace","Aston Villa vs Fulham"], detail: "A full Saturday programme including four more fixtures across the day." },
+
+  // ===== NOVEMBER 2026 =====
+  { date: "2026-11-03", comp: UCL, mw: "Matchday 4", fixtures: ["Arsenal, Aston Villa, Liverpool, Manchester City and Manchester United all in action"], detail: "Atlético Madrid host Bayern Munich among the round's headline ties elsewhere." },
+  { date: "2026-11-05", comp: UEL, mw: "Matchday 4", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "" },
+  { date: "2026-11-07", comp: PL, mw: "Matchweek 11", fixtures: ["Arsenal vs Hull City","Crystal Palace vs Liverpool","Brighton & Hove Albion vs Brentford","Everton vs Coventry City","Fulham vs Newcastle United","Ipswich Town vs AFC Bournemouth"], detail: "" },
+  { date: "2026-11-09", comp: INT, fixtures: ["International window opens"], detail: "A standard two-match break running to 17 November." },
+  { date: "2026-11-17", comp: INT, fixtures: ["International window closes"], detail: "Nations League and qualifying fixtures conclude before the league resumes." },
+  { date: "2026-11-24", comp: UCL, mw: "Matchday 5", fixtures: ["Arsenal, Aston Villa, Liverpool, Manchester City and Manchester United all in action"], detail: "" },
+  { date: "2026-11-26", comp: UEL, mw: "Matchday 5", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "" },
+
+  // ===== DECEMBER 2026 =====
+  { date: "2026-12-05", comp: PL, mw: "Matchweek 14 (approx.)", fixtures: ["Newcastle United vs Sunderland"], detail: "The festive Tyne–Wear derby." },
+  { date: "2026-12-08", comp: UCL, mw: "Matchday 6", fixtures: ["Barcelona vs Manchester City (away)"], detail: "City close the league phase's midpoint with a trip to the Camp Nou." },
+  { date: "2026-12-09", comp: UCL, mw: "Matchday 6", fixtures: ["Arsenal, Aston Villa, Liverpool and Manchester United also in action"], detail: "" },
+  { date: "2026-12-10", comp: UEL, mw: "Matchday 6", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "Sunderland's trip to AC Milan and Bournemouth's home tie with the same opponents are among the league phase's standout ties." },
+  { date: "2026-12-27", comp: PL, mw: "Boxing Week", fixtures: ["Coventry City vs Chelsea","Manchester United vs Nottingham Forest","Crystal Palace vs Arsenal"], detail: "" },
+  { date: "2026-12-29", comp: PL, mw: "Boxing Week", fixtures: ["Hull City vs Leeds United","Tottenham Hotspur vs Brighton & Hove Albion","Everton vs Manchester City"], detail: "" },
+  { date: "2026-12-30", comp: PL, mw: "Boxing Week", fixtures: ["Fulham vs Arsenal","Manchester United vs Sunderland","Aston Villa vs Liverpool","Newcastle United vs Nottingham Forest","Coventry City vs Brentford","Crystal Palace vs AFC Bournemouth","Ipswich Town vs Chelsea"], detail: "A packed midweek card rounds out 2026." },
+
+  // ===== JANUARY 2027 =====
+  { date: "2027-01-01", comp: PL, mw: "New Year", fixtures: ["Leeds United vs Everton"], detail: "" },
+  { date: "2027-01-02", comp: PL, mw: "Matchweek 20", fixtures: ["Brighton & Hove Albion vs Manchester United","Arsenal vs Ipswich Town","Brentford vs Crystal Palace","Liverpool vs Coventry City","Nottingham Forest vs Fulham","Sunderland vs Hull City","AFC Bournemouth vs Aston Villa"], detail: "" },
+  { date: "2027-01-03", comp: PL, mw: "Matchweek 20", fixtures: ["Chelsea vs Newcastle United","Manchester City vs Tottenham Hotspur"], detail: "" },
+  { date: "2027-01-19", comp: UCL, mw: "Matchday 7", fixtures: ["Inter Milan vs Liverpool (away)","Manchester United vs Bayern Munich"], detail: "Liverpool travel to Milan while United host Bayern at Old Trafford." },
+  { date: "2027-01-21", comp: UEL, mw: "Matchday 7", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "" },
+  { date: "2027-01-27", comp: UCL, mw: "Matchday 8 (final)", fixtures: ["Villarreal vs Manchester United (away)"], detail: "The Champions League league phase concludes — the top eight advance straight to the last 16, 9th–24th enter a knockout play-off." },
+  { date: "2027-01-28", comp: UEL, mw: "Matchday 8 (final)", fixtures: ["Bournemouth, Sunderland, Crystal Palace in action"], detail: "Europa League league phase concludes." },
+
+  // ===== FEBRUARY 2027 =====
+  { date: "2027-02-16", comp: UCL, mw: "Knockout play-offs", fixtures: ["First legs"], detail: "Clubs finishing 9th–24th in the league phase begin a two-legged play-off for a place in the last 16." },
+  { date: "2027-02-18", comp: UEL, mw: "Knockout play-offs", fixtures: ["First legs"], detail: "" },
+  { date: "2027-02-23", comp: UCL, mw: "Knockout play-offs", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-02-25", comp: UEL, mw: "Knockout play-offs", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-02-27", comp: PL, mw: "Matchweek 27", fixtures: ["Aston Villa vs Chelsea","Manchester United vs Arsenal","Hull City vs Manchester City","Coventry City vs AFC Bournemouth","Crystal Palace vs Sunderland","Everton vs Nottingham Forest","Fulham vs Leeds United","Ipswich Town vs Brighton & Hove Albion"], detail: "" },
+
+  // ===== MARCH 2027 =====
+  { date: "2027-03-09", comp: UCL, mw: "Round of 16", fixtures: ["First legs"], detail: "" },
+  { date: "2027-03-11", comp: UEL, mw: "Round of 16", fixtures: ["First legs"], detail: "" },
+  { date: "2027-03-16", comp: UCL, mw: "Round of 16", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-03-18", comp: UEL, mw: "Round of 16", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-03-20", comp: PL, mw: "Matchweek 30 (approx.)", fixtures: ["Manchester City vs Manchester United"], detail: "The reverse Manchester derby, at the Etihad." },
+  { date: "2027-03-22", comp: INT, fixtures: ["International window opens"], detail: "Nations League quarter-finals and finals fall within this break, running to 30 March." },
+  { date: "2027-03-30", comp: INT, fixtures: ["International window closes"], detail: "" },
+
+  // ===== APRIL 2027 =====
+  { date: "2027-04-06", comp: UCL, mw: "Quarter-finals", fixtures: ["First legs"], detail: "" },
+  { date: "2027-04-08", comp: UEL, mw: "Quarter-finals", fixtures: ["First legs"], detail: "" },
+  { date: "2027-04-13", comp: UCL, mw: "Quarter-finals", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-04-15", comp: UEL, mw: "Quarter-finals", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-04-27", comp: UCL, mw: "Semi-finals", fixtures: ["First legs"], detail: "" },
+  { date: "2027-04-29", comp: UEL, mw: "Semi-finals", fixtures: ["First legs"], detail: "" },
+
+  // ===== MAY 2027 =====
+  { date: "2027-05-01", comp: PL, mw: "Matchweek 35 (approx.)", fixtures: ["Sunderland vs Newcastle United"], detail: "The Black Cats host the return Tyne–Wear derby." },
+  { date: "2027-05-04", comp: UCL, mw: "Semi-finals", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-05-06", comp: UEL, mw: "Semi-finals", fixtures: ["Second legs"], detail: "" },
+  { date: "2027-05-08", comp: PL, mw: "Matchweek 36 (approx.)", fixtures: ["Manchester City vs Liverpool"], detail: "" },
+  { date: "2027-05-26", comp: UEL, mw: "Final", fixtures: ["Stadion Frankfurt, Germany"], detail: "" },
+  { date: "2027-05-30", comp: PL, mw: "Matchweek 38", fixtures: ["Final day — all fixtures kick off simultaneously"], detail: "The 2026/27 Premier League season concludes." },
+
+  // ===== JUNE 2027 =====
+  { date: "2027-06-02", comp: UECL, mw: "Final", fixtures: ["Beşiktaş Stadium, Istanbul"], detail: "" },
+  { date: "2027-06-05", comp: UCL, mw: "Final", fixtures: ["Estadio Metropolitano, Madrid"], detail: "" },
+];
+
+// ---- Render ----
+const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+events.sort((a,b) => a.date.localeCompare(b.date));
+
+const timeline = document.getElementById("timeline");
+let lastMonthKey = null;
+
+events.forEach(ev => {
+  const d = new Date(ev.date + "T12:00:00");
+  const monthKey = d.getFullYear() + "-" + d.getMonth();
+  if (monthKey !== lastMonthKey) {
+    lastMonthKey = monthKey;
+    const mh = document.createElement("div");
+    mh.className = "month-head";
+    mh.innerHTML = `<span class="display">${monthNames[d.getMonth()]}</span><span class="yr">${d.getFullYear()}</span><span class="rule"></span>`;
+    timeline.appendChild(mh);
+  }
+
+  const entry = document.createElement("div");
+  entry.className = "entry";
+  entry.dataset.comp = ev.comp;
+
+  const compLabel = { PL: "Premier League", UCL: "Champions League", UEL: "Europa League", UECL: "Conference League", INT: "International Break" }[ev.comp];
+
+  const fixturesHTML = ev.fixtures.map(f => {
+    if (f.includes(" vs ")) {
+      const [a,b] = f.split(" vs ");
+      return `<div>${a}<span class="vs">vs</span>${b}</div>`;
+    }
+    return `<div>${f}</div>`;
+  }).join("");
+
+  const isIntl = ev.comp === INT;
+
+  entry.innerHTML = `
+    <div class="date-col">
+      <div class="d">${d.getDate()}</div>
+      <div class="wd">${dayNames[d.getDay()]}</div>
+    </div>
+    <div class="content-col">
+      ${isIntl ? `
+        <div class="intl-block">
+          <div class="tag-row"><span class="tag ${ev.comp}">${compLabel}</span></div>
+          <div class="fixlist">${fixturesHTML}</div>
+          ${ev.detail ? `<div class="detail">${ev.detail}</div>` : ""}
+        </div>
+      ` : `
+        <div class="tag-row">
+          <span class="tag ${ev.comp}">${compLabel}</span>
+          ${ev.mw ? `<span class="mw">${ev.mw}</span>` : ""}
+        </div>
+        <div class="fixlist">${fixturesHTML}</div>
+        ${ev.detail ? `<div class="detail">${ev.detail}</div>` : ""}
+      `}
+    </div>
+  `;
+  timeline.appendChild(entry);
+});
+
+// ---- Filtering ----
+const legend = document.getElementById("legend");
+const chips = Array.from(legend.querySelectorAll(".chip"));
+let active = new Set(["ALL"]);
+
+function applyFilter() {
+  const entries = document.querySelectorAll(".entry");
+  const showAll = active.has("ALL") || active.size === 0;
+  entries.forEach(e => {
+    e.classList.toggle("hidden", !(showAll || active.has(e.dataset.comp)));
+  });
+  // hide month headers with no visible entries
+  document.querySelectorAll(".month-head").forEach(mh => {
+    let sib = mh.nextElementSibling;
+    let anyVisible = false;
+    while (sib && !sib.classList.contains("month-head")) {
+      if (!sib.classList.contains("hidden")) anyVisible = true;
+      sib = sib.nextElementSibling;
+    }
+    mh.style.display = anyVisible ? "" : "none";
+  });
+  const visibleCount = document.querySelectorAll(".entry:not(.hidden)").length;
+  document.getElementById("statLine").textContent = `${visibleCount} of ${entries.length} entries`;
+  chips.forEach(c => c.dataset.off = !(active.has(c.dataset.comp) || (c.dataset.comp === "ALL" && showAll)) );
+}
+
+chips.forEach(chip => {
+  chip.addEventListener("click", () => {
+    const comp = chip.dataset.comp;
+    if (comp === "ALL") {
+      active = new Set(["ALL"]);
+    } else {
+      active.delete("ALL");
+      if (active.has(comp)) active.delete(comp); else active.add(comp);
+      if (active.size === 0) active.add("ALL");
+    }
+    applyFilter();
+  });
+});
+
+applyFilter();
+
+// ---- Theme toggle ----
+const themeToggle = document.getElementById("themeToggle");
+let theme = "dark";
+themeToggle.addEventListener("click", () => {
+  theme = theme === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", theme);
+  themeToggle.textContent = theme === "dark" ? "🌙" : "☀️";
+});
+</script>
+</body>
+</html>
