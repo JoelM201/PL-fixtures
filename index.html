@@ -123,7 +123,7 @@
   }
   .toolbar-inner { max-width: 760px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .stat { font-size: 12.5px; color: var(--ink-faint); margin-left: auto; white-space: nowrap; font-weight: 600; }
-
+  .link-section { max-width: 760px; margin: 26px auto 0; padding: 0 22px; } .ext-link-btn { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-radius: var(--radius); background: linear-gradient(120deg, color-mix(in srgb, var(--pl-bright) 20%, var(--bg-card)), color-mix(in srgb, var(--ucl-bright) 16%, var(--bg-card))); border: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: transform .12s ease, border-color .12s ease; } .ext-link-btn:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--pl-bright) 50%, var(--line)); } .ext-link-btn:active { transform: scale(0.99); } .ext-link-btn .elb-text { display: flex; flex-direction: column; gap: 2px; } .ext-link-btn .elb-label { font-size: 15.5px; font-weight: 800; } .ext-link-btn .elb-sub { font-size: 12.5px; color: var(--ink-dim); font-weight: 500; } .ext-link-btn .elb-arrow { font-size: 20px; color: var(--ink-dim); flex-shrink: 0; } @media (max-width: 420px) { .link-section { padding: 0 16px; } }
   /* ---------- Timeline ---------- */
   main { max-width: 760px; margin: 0 auto; padding: 30px 22px 20px; }
   .month-head {
@@ -221,7 +221,7 @@
     </div>
   </div>
 </div>
-
+<div class="link-section"> <a class="ext-link-btn" href="https://fantasy.premierleague.com/en/" target="_blank" rel="noopener"> <div class="elb-text"> <span class="elb-label">⚽ Fantasy Premier League</span> <span class="elb-sub">fantasy.premierleague.com</span> </div> <span class="elb-arrow">→</span> </a> </div>
 <div class="toolbar">
   <div class="toolbar-inner">
     <span class="stat" id="statLine"></span>
